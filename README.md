@@ -7,3 +7,5 @@ Node versions
 - [password-policy](https://dzek69.github.io/password-policy) - My own password policy for apps I'm creating
 - [react-autobind-hmr](https://dzek69.github.io/react-autobind-hmr) - Wrapper for react-autobind that adds support for
 projects with React-Hot-Loader (ie: Next.js).
+- [react-native-voice-oop](https://dzek69.github.io/react-native-voice-oop) - Wrapper for react-native-voice that allows
+OOP code style instead of bug-prone globals-overwriting style.

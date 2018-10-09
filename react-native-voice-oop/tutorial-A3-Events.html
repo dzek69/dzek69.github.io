@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Tutorial: Event names and data - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="VoiceToText.html">VoiceToText</a><ul class='methods'><li data-type='method'><a href="VoiceToText.html#addEventListener">addEventListener</a></li><li data-type='method'><a href="VoiceToText.html#cancel">cancel</a></li><li data-type='method'><a href="VoiceToText.html#destroy">destroy</a></li><li data-type='method'><a href="VoiceToText.html#removeEventListener">removeEventListener</a></li><li data-type='method'><a href="VoiceToText.html#start">start</a></li><li data-type='method'><a href="VoiceToText.html#stop">stop</a></li></ul></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-A1-Installation.html">Installation</a></li><li><a href="tutorial-A2-How-to-use.html">How to use</a></li><li><a href="tutorial-A3-Events.html">Event names and data</a></li><li><a href="tutorial-CHANGELOG.html">CHANGELOG</a></li></ul><h3>Global</h3><ul><li><a href="global.html#EVENTS">EVENTS</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tutorial: Event names and data</h1>
+    
+
+    <section>
+
+<header>
+    
+
+    <h2>Event names and data</h2>
+</header>
+
+<article>
+    <h1>Explaination - missing information in <code>react-native-voice</code> docs</h1><p>In my opinion <code>react-native-voice</code> fails to properly document available events, their meaning, triggering order that
+should be expected and data received with events. Read on for missing documentation on this.</p>
+<h2>Events list and their meaning</h2><blockquote>
+<p>Note: This was verified on Android device only. iOS experiments will be documented here later.</p>
+<p>Note: Nothing here is guaranted to be true, everything here is a documented result of experiments.</p>
+</blockquote>
+<h3>start</h3><p><code>start</code> looks like a indicator that voice is</p>
+<ul>
+<li>started being recorded by device</li>
+<li>started being sent over to recognition server</li>
+</ul>
+<p>Yes, this means <code>start</code> <strong>is triggered twice</strong> on successful voice recognition.
+<code>start</code> is triggered once on erroneous voice recognition, when there is no Internet connection.</p>
+<h3>end</h3><p><code>end</code> looks like indicator that sound is no longer being sent to recognition server. Recognition still happens on
+server after the event is triggered.</p>
+<p>This means <code>end</code> <strong>is NOT triggered</strong> on erroneous voice recognition, when there is no Internet connection.
+<code>end</code> will however be triggered when there was no words recognized.
+<code>end</code> will be also triggered when sending data to server was started but was interrupted (lost connection).</p>
+<h3>volumeChanged</h3><p><code>volumeChanged</code> is triggered many times, every few ms. It is all over between other events. It's usually triggered few
+times before <code>start</code>, it's triggered few times after <code>end</code> and even after <code>results</code>. Doesn't look useful.</p>
+<blockquote>
+<p>Note: Currently all events after <code>results</code> or <code>error</code> events are muted and unlistenable due to actions this wrapper
+does to differentiate which instance should receive the event. Usually this means few <code>volumeChanged</code> events to be
+skipped. This is not very useful as after <code>results</code> or <code>error</code> events voice recognition is stopped anyway.</p>
+<p>This may change in the future.</p>
+</blockquote>
+<h3>partialResults</h3><p><code>partialResults</code> is usually triggered few times during recognition.</p>
+<h3>results</h3><p><code>results</code> is the final result of recognition.</p>
+<h3>recognized</h3><p>It seems to never be triggered, <code>react-native-voice</code> notes that it should be triggered on both iOS and Android.</p>
+<h3>error</h3><p><code>error</code> is triggered when recognition fails due to no connection or connection broken in the middle. Probably triggered
+when server fails for some reason too.</p>
+<h2>Data of events</h2><blockquote>
+<p>Note: This was verified on Android device only. iOS experiments will be documented here later.</p>
+</blockquote>
+<p>In general - data structure of events data are always the same. So you don't need to worry that instead of object
+you'll get null or object without expected <code>value</code> key but with <code>error</code> key instead.</p>
+<h3>start</h3><pre class="prettyprint source lang-javascript"><code>{ error: false }</code></pre><p>Always just this.</p>
+<h3>end</h3><pre class="prettyprint source lang-javascript"><code>{ error: false }</code></pre><p>Always just this, even when connection fails.</p>
+<h3>volumeChanged</h3><pre class="prettyprint source lang-javascript"><code>{ value: VALUE_HERE }</code></pre><p>In general - <code>VALUE_HERE</code> seems to be positive value when device hears something (the bigger the value - the louder 
+the sound) and negative when there is silence.
+However the values seems to be hardcoded into few constants:</p>
+<ul>
+<li>on silence:<ul>
+<li><code>-2.119999885559082</code></li>
+<li><code>-2</code></li>
+</ul>
+</li>
+<li>on voice:<ul>
+<li><code>1.6000001430511475</code></li>
+<li><code>2.8000001907348633</code></li>
+<li><code>4</code></li>
+<li><code>5.200000286102295</code></li>
+<li><code>6.399999618530273</code></li>
+<li><code>8.799999237060547</code></li>
+<li><code>10</code></li>
+</ul>
+</li>
+</ul>
+<h3>partialResults</h3><pre class="prettyprint source lang-javascript"><code>{ value: [&quot;&quot;] }</code></pre><p>The array length is always <code>1</code>, but the string may be empty.</p>
+<h3>results</h3><pre class="prettyprint source lang-javascript"><code>{
+    value: [
+        &quot;possible value number one&quot;,
+        &quot;possible value number two&quot;,
+    ]
+}</code></pre><p>This array has length of 1 or more. If recognition server is unsure what was said - it sends few possible texts as a
+whole sentence.</p>
+<h3>recognized</h3><p>It seems to never be triggered, despite <code>react-native-voice</code> notes that it should be triggered on both iOS and Android.
+Anyway, accorting to original documentation it should contain always just this:</p>
+<pre class="prettyprint source lang-javascript"><code>{ error: false }</code></pre><h3>error</h3><pre class="prettyprint source lang-javascript"><code>{ error: &quot;1/Description&quot; }</code></pre><p>Object with <code>error</code> property that contains a string with error message in format:</p>
+<ul>
+<li>code</li>
+<li>slash</li>
+<li>description in English</li>
+</ul>
+<p>Usually: <code>7/No match</code></p>
+<h2>Order of events</h2><blockquote>
+<p>Remember about <code>volumeChanged</code>, it may happen anytime between those events.</p>
+</blockquote>
+<h3>In case of success:</h3><ol>
+<li><code>start</code> - triggered twice (see explanation above),</li>
+<li><code>partialResults</code>, usually triggered multiple times when partially recognized text is available,</li>
+<li><code>end</code>,</li>
+<li><code>partialResults</code> may still be triggered now, probably because while recognition stops and no data is send to server
+anymore the server may still push the data for previously received voice data,</li>
+<li><code>results</code> - final results.</li>
+</ol>
+<h3>In case of error (voice not recognized):</h3><ol>
+<li><code>start</code> - triggered twice (see explanation above),</li>
+<li><code>end</code>,</li>
+<li><code>partialResults</code> (with empty string, but may not be triggered)</li>
+<li><code>error</code> - final results.</li>
+</ol>
+<h3>In case of error (no Internet connection since beginning):</h3><ol>
+<li><code>start</code> - triggered once,</li>
+<li><code>error</code>.</li>
+</ol>
+<h3>In case of error during recognition (connection lost in the middle):</h3><ol>
+<li><code>start</code> - triggered usually twice, may be triggered once if connection is lost just after starting the recognition,</li>
+<li><code>partialResults</code>, may not be triggered if connection is lost quickly, may be triggered multiple times,</li>
+<li><code>end</code> (probably only if <code>start</code> was triggered twice),</li>
+<li><code>error</code> - usually there is few seconds gap between <code>end</code> and <code>error</code>.</li>
+</ol>
+<h3>In case of <code>stop</code>ping recognition in the middle:</h3><blockquote>
+<p>Stopping means just forcing recognizer to think that nothing is being said anymore.</p>
+</blockquote>
+<ul>
+<li>If something was recognized before stopping - events will be the same as in success case.</li>
+<li>If nothing was recognized before stopping - events will be the same as in error.</li>
+</ul>
+<h3>In case of <code>cancel</code>ling recognition in the middle:</h3><blockquote>
+<p>Cancelling means ignoring everything - stopping in the middle with no ending events being sent.</p>
+</blockquote>
+<ul>
+<li>If something was recognized before cancelling - events will be the same as in success case, but <code>end</code> and <code>results</code> will
+never be triggered.</li>
+<li>If nothing was recognized before cancelling - only <code>start</code> event will be triggered.</li>
+</ul>
+</article>
+
+</section>
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Oct 09 2018 14:29:35 GMT+0200 (Środkowoeuropejski czas letni) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+
+
+</body>
+</html>

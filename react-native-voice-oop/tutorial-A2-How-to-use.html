@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Tutorial: How to use - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="VoiceToText.html">VoiceToText</a><ul class='methods'><li data-type='method'><a href="VoiceToText.html#addEventListener">addEventListener</a></li><li data-type='method'><a href="VoiceToText.html#cancel">cancel</a></li><li data-type='method'><a href="VoiceToText.html#destroy">destroy</a></li><li data-type='method'><a href="VoiceToText.html#removeEventListener">removeEventListener</a></li><li data-type='method'><a href="VoiceToText.html#start">start</a></li><li data-type='method'><a href="VoiceToText.html#stop">stop</a></li></ul></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-A1-Installation.html">Installation</a></li><li><a href="tutorial-A2-How-to-use.html">How to use</a></li><li><a href="tutorial-A3-Events.html">Event names and data</a></li><li><a href="tutorial-CHANGELOG.html">CHANGELOG</a></li></ul><h3>Global</h3><ul><li><a href="global.html#EVENTS">EVENTS</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tutorial: How to use</h1>
+    
+
+    <section>
+
+<header>
+    
+
+    <h2>How to use</h2>
+</header>
+
+<article>
+    <h1>How to use <code>react-native-voice-oop</code></h1><p>This library exports default <a href="VoiceToText.html">VoiceToText</a> class and <a href="global.html#EVENTS">EVENTS</a> object with events names.</p>
+<p>In the opposite to <code>react-native-voice</code> this library aims to allow typical OOP style and discourage using of globals.</p>
+<p>See <code>start</code> method for full featured example.</p>
+<h2>Constructor</h2><blockquote>
+<p>Constructor takes no arguments.</p>
+</blockquote>
+<p>Example:</p>
+<pre class="prettyprint source lang-javascript"><code>import VoiceToText from &quot;react-native-voice-oop&quot;;
+
+const voice = new VoiceToText();</code></pre><h2>destroy</h2><blockquote>
+<p><code>destroy</code> takes no arguments.</p>
+</blockquote>
+<p>It is very important to destroy instance when it is not needed anymore. This prevents memory leaks.</p>
+<p>Example:</p>
+<pre class="prettyprint source lang-javascript"><code>import React from &quot;react&quot;;
+import VoiceToText from &quot;react-native-voice-oop&quot;;
+
+class MyElement extends React.Component {
+    componentDidMount() {
+        this.voice = new VoiceToText();
+    }
+
+    componentWillUnmount() {
+        this.voice.destroy();
+        this.voice = null;
+    }
+}</code></pre><p>If this particular instance started voice recognition - it will be cancelled, results and future events of that
+recognition will be completely ignored. You don't need to detach listeners (see below).</p>
+<h2>addEventListener</h2><blockquote>
+<p>Arguments list:</p>
+<ul>
+<li>{string} eventName - event name to listen too. Use @{link EVENTS} exported constant to provide with event name,</li>
+<li>{function} listener - function to be invoked when event happens.</li>
+</ul>
+</blockquote>
+<p>You can attach multiple listeners to the same event.</p>
+<p>Example:</p>
+<pre class="prettyprint source lang-javascript"><code>import React from &quot;react&quot;;
+import VoiceToText from &quot;react-native-voice-oop&quot;;
+
+class MyElement extends React.Component {
+    componentDidMount() {
+        this.voice = new VoiceToText();
+        this.voice.addEventListener(&quot;results&quot;, this.handleVoiceResults.bind(this));
+        // ^ it is safe to use `bind` there, as `destroy` will remove all listeners for you
+    }
+
+    handleVoiceResults({ value }) {
+        this.setState({
+            text: value[0],
+        });
+    }
+
+    // remember to destroy on unmount
+}</code></pre><h2>removeEventListener</h2><blockquote>
+<p>Arguments list:</p>
+<ul>
+<li>{string} eventName - event name. Use @{link EVENTS} exported constant to provide with event name,</li>
+<li>{function} listener - function that should be removed from listeners of specified event.</li>
+</ul>
+</blockquote>
+<p>Remember that <code>fn.bind()</code> creates each NEW function each time. Therefore this won't work as expected:</p>
+<p>Bad example:</p>
+<pre class="prettyprint source lang-javascript"><code>import React from &quot;react&quot;;
+import VoiceToText from &quot;react-native-voice-oop&quot;;
+
+class MyElement extends React.Component {
+    componentDidMount() {
+        this.voice = new VoiceToText();
+    }
+
+    addListeners() {
+        this.voice.addEventListener(&quot;results&quot;, this.handleVoiceResults.bind(this));
+    }
+
+    removeListeners() {
+        this.voice.addEventListener(&quot;results&quot;, this.handleVoiceResults.bind(this));
+        // ^ wrong, .bind will return new function, another one that returned in `addListeners`, so listener won't be
+        // removed
+    }
+
+    // remember to destroy on unmount
+}</code></pre><p>Good example:</p>
+<pre class="prettyprint source lang-javascript"><code>import React from &quot;react&quot;;
+import VoiceToText from &quot;react-native-voice-oop&quot;;
+
+class MyElement extends React.Component {
+    componentDidMount() {
+        this.voice = new VoiceToText();
+        this.boundHandleVoiceResults = this.handleVoiceResults.bind(this)
+    }
+
+    addListeners() {
+        this.voice.addEventListener(&quot;results&quot;, this.boundHandleVoiceResults);
+    }
+
+    removeListeners() {
+        this.voice.addEventListener(&quot;results&quot;, this.boundHandleVoiceResults);
+    }
+
+    // remember to destroy on unmount
+}</code></pre><h2>start</h2><blockquote>
+<p>Arguments list:</p>
+<ul>
+<li>{string} locale - locale in which you expect the voice to be recognized. On Android voice recognizer may try to
+handle different locales anyway.</li>
+</ul>
+</blockquote>
+<p>Starts recognizing.</p>
+<blockquote>
+<p>Throws an error - if another instance is already recognizing. Use static <code>VoiceToText.isRecognizing();</code> method to
+check if recognizing is in progress.</p>
+</blockquote>
+<p>Example:</p>
+<pre class="prettyprint source lang-jsx"><code>import React from &quot;react&quot;;
+import { Text, View } from &quot;react-native&quot;;
+import VoiceToText, { EVENTS } from &quot;react-native-voice-oop&quot;;
+
+class MyElement extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            text: &quot;&quot;,
+        };
+
+        this.handlePress = this.handlePress.bind(this);
+    }
+
+    componentDidMount() {
+        this.voice = new VoiceToText();
+        this.voice.addEventListener(EVENTS.results, this.handleResults.bind(this));
+    }
+
+    handleResults({ value }) {
+        this.setState({
+            text: value[0],
+        });
+    }
+
+    handlePress() {
+        if (!VoiceToText.isRecognizing()) {
+            this.voice.start();
+        }
+    }
+
+    render() {
+        &lt;View>
+            &lt;Text onPress={this.handlePress}>Start!&lt;/Text>
+            &lt;Text>Recognized text: {this.state.text}&lt;/Text>
+        &lt;/View>
+
+    }
+}</code></pre><h2>stop</h2><blockquote>
+<p><code>stop</code> takes no arguments.</p>
+</blockquote>
+<p>Stops recognizing. If something was recognized before stopping - <code>results</code> event will be triggered.
+If nothing was recognized - <code>error</code> event will be triggered.</p>
+<p>See <a href="tutorial-A3-Events.html">Event names and data</a> for more information.</p>
+<p>Example:</p>
+<pre class="prettyprint source lang-javascript"><code>import React from &quot;react&quot;;
+import VoiceToText from &quot;react-native-voice-oop&quot;;
+
+class MyElement extends React.Component {
+    componentDidMount() {
+        this.voice = new VoiceToText();
+    }
+
+    handleStartPress() {
+        this.voice.start();
+    }
+
+    handleStopPress() {
+        this.voice.stop();
+    }
+}</code></pre><h2>cancel</h2><blockquote>
+<p><code>cancel</code> takes no arguments.</p>
+</blockquote>
+<p>Cancels recognizing. Partial results will be discarded and no <code>results</code> or <code>error</code> event will occur.</p>
+<p>See <a href="tutorial-A3-Events.html">Event names and data</a> for more information.</p>
+<p>Example:</p>
+<pre class="prettyprint source lang-javascript"><code>import React from &quot;react&quot;;
+import VoiceToText from &quot;react-native-voice-oop&quot;;
+
+class MyElement extends React.Component {
+    componentDidMount() {
+        this.voice = new VoiceToText();
+    }
+
+    handleStartPress() {
+        this.voice.start();
+    }
+
+    handleCancelPress() {
+        this.voice.cancel();
+    }
+}</code></pre>
+</article>
+
+</section>
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Oct 09 2018 14:29:35 GMT+0200 (Środkowoeuropejski czas letni) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+
+
+</body>
+</html>
