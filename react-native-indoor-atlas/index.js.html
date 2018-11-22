@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>index.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="IndoorAtlas.html">IndoorAtlas</a><ul class='methods'><li data-type='method'><a href="IndoorAtlas.html#addListener">addListener</a></li><li data-type='method'><a href="IndoorAtlas.html#destroy">destroy</a></li><li data-type='method'><a href="IndoorAtlas.html#removeListener">removeListener</a></li></ul></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-CHANGELOG.html">CHANGELOG</a></li><li><a href="tutorial-Usage.html">Usage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#EVENTS">EVENTS</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { NativeModules, NativeEventEmitter } from "react-native";
+
+import eventsInitializer from "./NativeEventsInitializer";
+
+const { IndoorAtlas: NativeIndoorAtlas } = NativeModules;
+
+const NOT_FOUND = -1;
+
+const LOCATION_CHANGED = "locationChanged";
+const STATUS_CHANGED = "statusChanged";
+
+/**
+ * @typedef {string} EventName
+ * Name of the event
+ */
+
+/**
+ * @typedef {Object} EventsList
+ * @property {EventName} LOCATION_CHANGED - user location changed evenet
+ * @property {EventName} STATUS_CHANGED - IA connection status changed evenet
+ */
+
+/**
+ * @type {EventsList}
+ */
+const EVENTS = {
+    LOCATION_CHANGED,
+    STATUS_CHANGED,
+};
+
+/**
+ * Indoor Atlas events handling class
+ */
+class IndoorAtlas {
+    /**
+     * Constructs new instance. Takes no arguments.
+     */
+    constructor() {
+        this._listeners = { // @todo use EVENTS in a loop to define this
+            locationChanged: [],
+            statusChanged: [],
+            // debug: [],
+        };
+
+        this.on = this.addListener;
+        this.off = this.removeListener;
+
+        const indoorAtlasEventEmitter = new NativeEventEmitter(NativeIndoorAtlas);
+
+        Object.keys(this._listeners).forEach(eventName => {
+            const propertyName = "_" + eventName + "Subscription";
+            const listener = this._handleIndoorAtlasEvent.bind(this, eventName);
+            this[propertyName] = indoorAtlasEventEmitter.addListener(eventName, listener);
+        });
+    }
+
+    _handleIndoorAtlasEvent(eventName, data) {
+        const array = this._listeners[eventName];
+        if (!array) {
+            return;
+        }
+
+        array.forEach(listener => listener(data));
+    }
+
+    /**
+     * Registers new event listener
+     *
+     * @param {EventName} eventName
+     * @param {function} listener
+     * @returns {void}
+     */
+    addListener(eventName, listener) {
+        const array = this._listeners[eventName];
+        if (!array) {
+            throw new Error("Unknown event");
+        }
+        if (typeof listener !== "function") {
+            throw new TypeError("Listener must be a function");
+        }
+        if (array.includes(listener)) {
+            throw new Error("Listener already attached");
+        }
+
+        array.push(listener);
+        eventsInitializer.increase();
+    }
+
+    /**
+     * Unregisters event listener
+     *
+     * @param {EventName} eventName
+     * @param {function} listener
+     * @returns {void}
+     */
+    removeListener(eventName, listener) {
+        const array = this._listeners[eventName];
+        if (!array) {
+            throw new Error("Unknown event");
+        }
+        const index = array.indexOf(listener);
+        if (index === NOT_FOUND) {
+            throw new Error("Listener wasn't attached or is already removed");
+        }
+
+        array.splice(index, 1);
+        eventsInitializer.decrease();
+    }
+
+    /**
+     * Destroys instance. Unregisters all listeners automatically.
+     *
+     * @returns {void}
+     */
+    destroy() {
+        Object.entries(this._listeners).forEach(([eventName, eventArray]) => {
+            const subscriberPropertyName = "_" + eventName + "Subscription";
+            this[subscriberPropertyName].remove();
+
+            eventsInitializer.decrease(eventArray.length);
+            eventArray.length = 0; // eslint-disable-line no-param-reassign
+        });
+    }
+}
+
+export default IndoorAtlas;
+export {
+    EVENTS,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 22 2018 14:54:27 GMT+0100 (GMT+01:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+
+
+</body>
+</html>
