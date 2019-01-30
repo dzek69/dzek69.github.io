@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>get.js - Documentation</title>
+    <title>set.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -31,7 +31,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">get.js</h1>
+    <h1 class="page-title">set.js</h1>
     
 
     
@@ -41,44 +41,49 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Returns the value at given path of given object. If path is not found then default value is returned. No exceptions
- * are thrown when undefined/null value gets in the way.
- *
- * @param {Object} source - source object to search in
- * @param {string|Array&lt;string>} property - path to the expected value written as dot-separated property names or array
- * with property names. Use Array when your keys includes dots. Keys are treated literally, no parsing is done on keys.
- * @param {*} [defaultValue] - value to return if path is not found. If path is found, but the value is undefined -
- * default value will NOT be used, use `get(...) || default` instead
- * @example get(object, "deep.property") // equals to safe `object.deep.property`
- * @example get(object, ["deep", "property"]) // same as above
- * @example get(object, "deep[0].property")
- * // equals to:
- * object["deep[0]"].property
- * // not:
- * object.deep[0].property
- * @example get(object, "very.deep.property", 5)
- * // if object.very.deep has also `property` property then it value will be returned, even if undefined
- * // else `5` will be returned
- * @returns {*} - found value or default value
- */
-const get = (source, property, defaultValue) => {
-    const properties = typeof property === "string" ? property.split(".") : [...property];
+            <pre class="prettyprint source linenums"><code>const isObject = value => (typeof value === "object" || typeof value === "function") &amp;&amp; value !== null;
 
-    let result = source; // eslint-disable-line init-declarations
-    while (properties.length) {
-        const current = properties.shift();
-        if (result &amp;&amp; typeof result === "object" &amp;&amp; current in result) {
-            result = result[current];
+/**
+ * Updates the value at given path of given object. It mutates the object. If path is not found then objects are created
+ * "on the way". If non-objects are found, they are replaced with new plain objects. If primitives are used as source
+ * they are ignored and returned value is empty object with updated value at given path.
+ *
+ * @param {Object} source - source object to mutate
+ * @param {string|Array&lt;string>} path - path where value should be stored, written as dot-separated property names or
+ * array with property names. Use Array when your keys includes dots.
+ * @param {*} value - value to be set
+ * @example set(object, "deep.property", value)
+ * @example set(object, ["deep", "property"], value)
+ * @example set({}, "deep[0].property", value)
+ * // will create this structure:
+ * { "deep[0]": { "property": value }}
+ * @example set({}, "items.0", value)
+ * // will create object, not array
+ * { "items": { "0": value }}
+ * @returns {Object} - given object or new object if source was primitive
+ */
+const set = (source, path, value) => {
+    const pathParts = typeof path === "string" ? path.split(".") : path;
+    const len = pathParts.length;
+
+    const result = isObject(source) ? source : {};
+    let current = result; // eslint-disable-line init-declarations
+    for (let i = 0; i &lt; len; i++) {
+        const isLast = i === len - 1;
+        const key = pathParts[i];
+        if (isLast) {
+            current[key] = value;
+            return result;
         }
-        else {
-            return defaultValue;
+        if (!isObject(current[key])) {
+            current[key] = {};
         }
+        current = current[key];
     }
     return result;
 };
 
-export default get;
+export default set;
 </code></pre>
         </article>
     </section>
