@@ -14,6 +14,8 @@ easier start. Includes sane, ready to go unit testing, eslint integration and pu
 React Native projects.
 - [react-native-voice-oop](https://dzek69.github.io/react-native-voice-oop) - Wrapper for react-native-voice that allows
 OOP code style instead of bug-prone globals-overwriting style.
+- [react-source-of-truth](https://dzek69.github.io/react-source-of-truth) - `react-redux` style simpliest single source
+of truth state manager for React apps
 
 ## See also:
 - [dzek69's github](https://github.com/dzek69)
