@@ -16,6 +16,7 @@ React Native projects.
 OOP code style instead of bug-prone globals-overwriting style.
 - [react-source-of-truth](https://dzek69.github.io/react-source-of-truth) - `react-redux` style simpliest single source
 of truth state manager for React apps
+- [queue-system](https://dzek69.github.io/queue-system) - JavaScript tasks queuing system
 
 ## See also:
 - [dzek69's github](https://github.com/dzek69)
