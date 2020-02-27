@@ -1,5 +1,6 @@
 # dzek69's projects documentation
 
+- [abuseipdb](https://dzek69.github.io/abuseipdb) - Abuse IP DB v2 API client 
 - [better-custom-error](https://dzek69.github.io/better-custom-error) - Easy Javascript custom errors usage 
 - [bottom-line-utils](https://dzek69.github.io/bottom-line) - A tiny and fast lodash-inspired utils library
 - [node-dns-bugfix](https://dzek69.github.io/node-dns-bugfix) - Monkey patch bugfix for `dns.setServers` crash in older
