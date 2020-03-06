@@ -3,6 +3,7 @@
 - [abuseipdb](https://dzek69.github.io/abuseipdb) - Abuse IP DB v2 API client 
 - [better-custom-error](https://dzek69.github.io/better-custom-error) - Easy Javascript custom errors usage 
 - [bottom-line-utils](https://dzek69.github.io/bottom-line) - A tiny and fast lodash-inspired utils library
+- [miliseconds](https://dzek69.github.io/miliseconds) - Readable intervals, timeouts, delays and durations constants
 - [node-dns-bugfix](https://dzek69.github.io/node-dns-bugfix) - Monkey patch bugfix for `dns.setServers` crash in older
 Node versions
 - [oop-timers](https://dzek69.github.io/oop-timers) - OOP timers (timeout and interval) for JavaScript
