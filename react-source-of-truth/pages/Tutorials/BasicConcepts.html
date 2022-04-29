@@ -1,0 +1,356 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Basic concepts | react-source-of-truth - v4.0.0</title>
+	<meta name="description" content="Documentation for react-source-of-truth - v4.0.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/main.css">
+	<link rel="stylesheet" href="../../assets/css/pages.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../../assets/js/search.json" data-base="../..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../../index.html" class="title">react-source-of-truth - v4.0.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../../modules.html">Globals</a>
+				</li>
+				<li>
+					<a href="BasicConcepts.html">Tutorials</a>
+				</li>
+				<li>
+					<a href="BasicConcepts.html">Basic concepts</a>
+				</li>
+			</ul>
+			<h1>Basic concepts</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#basic-concepts-of-react-source-of-truth" id="basic-concepts-of-react-source-of-truth" style="color: inherit; text-decoration: none;">
+					<h2>Basic concepts of <code>react-source-of-truth</code></h2>
+				</a>
+				<p>Before you install the library let&#39;s overview the basic concepts by creating simple application.</p>
+				<blockquote>
+					<p>Note: The demo app we are creating here is available in <code>src/demo/DocsApp</code> in the repository of this library.</p>
+				</blockquote>
+				<a href="#state" id="state" style="color: inherit; text-decoration: none;">
+					<h3>State</h3>
+				</a>
+				<blockquote>
+					<p>If you&#39;re familiar with any state management library you can skip to the <code>Preparing your application...</code> section.</p>
+				</blockquote>
+				<p>State is a single object representing all the data your application to render your views.</p>
+				<p>You should put there:</p>
+				<ul>
+					<li>everything that&#39;s needed by more than one component - dark/light theme, current user data (login, name), etc.</li>
+					<li>everything you want to keep for using later - multiple stage forms, preloading some data</li>
+				</ul>
+				<p>You may keep using local state (<code>useState</code>/<code>setState</code>) for:</p>
+				<ul>
+					<li>input fields you don&#39;t want to use later</li>
+					<li>temporary data that&#39;s needed only for one component or for a component and it&#39;s direct descendants</li>
+				</ul>
+				<p>Basic state manager is called a <code>store</code>, just like in <code>redux</code>.</p>
+				<a href="#preparing-your-application-to-use-the-state" id="preparing-your-application-to-use-the-state" style="color: inherit; text-decoration: none;">
+					<h3>Preparing your application to use the state</h3>
+				</a>
+				<p>Our demo app will include four main points explaining this library basic features:</p>
+				<ul>
+					<li>user &quot;authentication&quot; - needed to greet the user, let them log in and out,</li>
+					<li>ui state - for toggling pop up menu</li>
+					<li>articles list</li>
+					<li>weather widget</li>
+				</ul>
+				<p>Preparing the app is just few simple steps:</p>
+				<ol>
+					<li>If you&#39;re using TypeScript - prepare a type definition for state object.</li>
+				</ol>
+				<blockquote>
+					<p>Example for our demo app:</p>
+				</blockquote>
+				<pre><code class="language-typescript"><span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">ui</span><span style="color: #000000">: {</span>
+<span style="color: #000000">        </span><span style="color: #001080">menuOpen</span><span style="color: #000000">: </span><span style="color: #267F99">boolean</span><span style="color: #000000">;</span>
+<span style="color: #000000">    };</span>
+<span style="color: #000000">    </span><span style="color: #001080">user</span><span style="color: #000000">: {</span>
+<span style="color: #000000">        </span><span style="color: #001080">loggedIn</span><span style="color: #000000">: </span><span style="color: #267F99">boolean</span><span style="color: #000000">;</span>
+<span style="color: #000000">        </span><span style="color: #001080">name</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">;</span>
+<span style="color: #000000">    };</span>
+<span style="color: #000000">    </span><span style="color: #001080">articles</span><span style="color: #000000">: {</span>
+<span style="color: #000000">        </span><span style="color: #001080">isLoading</span><span style="color: #000000">: </span><span style="color: #267F99">boolean</span><span style="color: #000000">;</span>
+<span style="color: #000000">        </span><span style="color: #001080">list</span><span style="color: #000000">: { </span><span style="color: #001080">title</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">; </span><span style="color: #001080">fullContent</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">; </span><span style="color: #001080">date</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000"> }[];</span>
+<span style="color: #000000">    };</span>
+<span style="color: #000000">    </span><span style="color: #001080">weatherWidget</span><span style="color: #000000">: {</span>
+<span style="color: #000000">        </span><span style="color: #001080">today</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">;</span>
+<span style="color: #000000">        </span><span style="color: #001080">tomorrow</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">;</span>
+<span style="color: #000000">    };</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<ol start="2">
+					<li>Define default state your app will start with.</li>
+				</ol>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">defaultState</span><span style="color: #000000">: </span><span style="color: #267F99">State</span><span style="color: #000000"> = {</span>
+<span style="color: #000000">    </span><span style="color: #001080">ui:</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">menuOpen:</span><span style="color: #000000"> </span><span style="color: #0000FF">false</span><span style="color: #000000">,</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">    </span><span style="color: #001080">articles:</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">isLoading:</span><span style="color: #000000"> </span><span style="color: #0000FF">false</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">list:</span><span style="color: #000000"> [],</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">    </span><span style="color: #001080">user:</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">loggedIn:</span><span style="color: #000000"> </span><span style="color: #0000FF">false</span><span style="color: #000000">,</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">    </span><span style="color: #001080">weatherWidget:</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">today:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;-3°C&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">tomorrow:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;25°C&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">};</span>
+</code></pre>
+				<ol start="3">
+					<li>Create store and create React integration hooks and Provider.</li>
+				</ol>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">store</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Truth</span><span style="color: #000000">(</span><span style="color: #001080">defaultState</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> { </span><span style="color: #0070C1">Provider</span><span style="color: #000000">, </span><span style="color: #0070C1">useTruthSelector</span><span style="color: #000000">, </span><span style="color: #0070C1">useTruthUpdate</span><span style="color: #000000"> } = </span><span style="color: #795E26">createTruth</span><span style="color: #000000">(</span><span style="color: #001080">store</span><span style="color: #000000">);</span>
+</code></pre>
+				<ol start="4">
+					<li>Wrap your application with <code>Provider</code>.</li>
+				</ol>
+				<pre><code class="language-typescript"><span style="color: #001080">ReactDOM</span><span style="color: #000000">.</span><span style="color: #795E26">render</span><span style="color: #000000">(</span>
+<span style="color: #000000">    &lt;</span><span style="color: #267F99">Provider</span><span style="color: #000000">&gt;</span>
+<span style="color: #000000">        &lt;</span><span style="color: #001080">App</span><span style="color: #000000"> /&gt;</span>
+<span style="color: #000000">    &lt;/</span><span style="color: #001080">Provider</span><span style="color: #000000">&gt;,</span>
+<span style="color: #000000">    </span><span style="color: #001080">rootElement</span>
+<span style="color: #000000">)</span>
+</code></pre>
+				<a href="#read-data-in-the-store" id="read-data-in-the-store" style="color: inherit; text-decoration: none;">
+					<h3>Read data in the store</h3>
+				</a>
+				<p>Use <code>useTruthSelector</code> hook to access the data. First argument is a selector function, which takes a whole state object
+					as an argument and should return that part of object you want to watch for changes. Component will be rendered again
+				when the value changes.</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">MyComponent</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">loggedIn</span><span style="color: #000000"> = </span><span style="color: #795E26">useTruthSelector</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">user</span><span style="color: #000000">.</span><span style="color: #001080">loggedIn</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> &lt;</span><span style="color: #267F99">div</span><span style="color: #000000">&gt;</span><span style="color: #001080">User</span><span style="color: #000000"> </span><span style="color: #001080">is</span><span style="color: #000000"> </span><span style="color: #001080">logged</span><span style="color: #000000"> </span><span style="color: #0000FF">in</span><span style="color: #000000">: {loggedIn ? </span><span style="color: #A31515">&quot;yes&quot;</span><span style="color: #001080"> :</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;no&quot;</span><span style="color: #000000">}&lt;/</span><span style="color: #001080">div</span><span style="color: #000000">&gt;;</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<a href="#update-data-in-the-store" id="update-data-in-the-store" style="color: inherit; text-decoration: none;">
+					<h3>Update data in the store</h3>
+				</a>
+				<p><code>useTruthUpdate</code> hook returns a function you should call when you want to update a part of your state. That function
+					expects two arguments - first function is again a selector function - you specify which part of the state you want to
+					update. Second argument is again a function - it will get current value (before the desired change) as an argument and
+				expects you to return new value.</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">MyComponent</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">update</span><span style="color: #000000"> = </span><span style="color: #795E26">useTruthUpdate</span><span style="color: #000000">();</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">handleLogIn</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #795E26">update</span><span style="color: #000000">( </span><span style="color: #008000">// Simulated log in handler</span>
+<span style="color: #000000">        </span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">user</span><span style="color: #000000">,</span>
+<span style="color: #000000">        () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> ({ </span><span style="color: #001080">loggedIn:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">, </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;Stefan&quot;</span><span style="color: #000000"> })</span>
+<span style="color: #000000">    );</span>
+
+<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> &lt;</span><span style="color: #267F99">button</span><span style="color: #000000"> </span><span style="color: #267F99">onClick</span><span style="color: #000000">={</span><span style="color: #001080">handleLogIn</span><span style="color: #000000">}&gt;</span><span style="color: #001080">log</span><span style="color: #000000"> </span><span style="color: #0000FF">in</span><span style="color: #000000">&lt;/</span><span style="color: #001080">button</span><span style="color: #000000">&gt;;</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>Use second argument to the <code>update</code> function for easy value toggling for example:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">handleMenuClick</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">ui</span><span style="color: #000000">.</span><span style="color: #001080">menuOpen</span><span style="color: #000000">, </span><span style="color: #001080">currentValue</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> !</span><span style="color: #001080">currentValue</span><span style="color: #000000">);</span>
+</code></pre>
+				<blockquote>
+					<p>You can find all the above knowledge in a form of complete component in <code>src/demo/DocsApp/components/Top.tsx</code>.
+					Take a look inside <code>Body.tsx</code> for asynchronous data loading simulation.</p>
+				</blockquote>
+				<blockquote>
+					<p>If you don&#39;t like the idea of updating the state directly inside your components (mixing logic and views) then prepare
+					yourself some kind of <code>useApi</code> hook and keep all the updating logic there.</p>
+				</blockquote>
+				<a href="#more-dynamic-data-reading" id="more-dynamic-data-reading" style="color: inherit; text-decoration: none;">
+					<h3>More dynamic data reading</h3>
+				</a>
+				<p>Sometimes you need to get access to the data using variables. In this case you need to specify second argument to
+					<code>useTruthSelector</code> - a dependencies array, just like you would do for <code>useMemo</code> or <code>useEffect</code>. This way you can
+				dynamically switch from which point of state you want to retrieve data.</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">type</span><span style="color: #000000"> </span><span style="color: #267F99">For</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;today&quot;</span><span style="color: #000000"> | </span><span style="color: #A31515">&quot;tomorrow&quot;</span><span style="color: #000000">;</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">Weather</span><span style="color: #000000"> = (</span><span style="color: #001080">props</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> [</span><span style="color: #0070C1">wfor</span><span style="color: #000000">, </span><span style="color: #0070C1">setFor</span><span style="color: #000000">] = </span><span style="color: #795E26">useState</span><span style="color: #000000">&lt;</span><span style="color: #267F99">For</span><span style="color: #000000">&gt;(</span><span style="color: #A31515">&quot;today&quot;</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">weather</span><span style="color: #000000"> = </span><span style="color: #795E26">useTruthSelector</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">weatherWidget</span><span style="color: #000000">[</span><span style="color: #001080">wfor</span><span style="color: #000000">];</span>
+<span style="color: #000000">    }, [</span><span style="color: #001080">wfor</span><span style="color: #000000">]);</span>
+
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">handleForToggle</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> { </span><span style="color: #795E26">setFor</span><span style="color: #000000">(</span><span style="color: #001080">p</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> (</span><span style="color: #001080">p</span><span style="color: #000000"> === </span><span style="color: #A31515">&quot;today&quot;</span><span style="color: #000000"> ? </span><span style="color: #A31515">&quot;tomorrow&quot;</span><span style="color: #000000"> : </span><span style="color: #A31515">&quot;today&quot;</span><span style="color: #000000">)); };</span>
+
+<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> (</span>
+<span style="color: #000000">        &lt;</span><span style="color: #001080">div</span><span style="color: #000000"> </span><span style="color: #001080">className</span><span style="color: #000000">={styles.</span><span style="color: #001080">weather</span><span style="color: #000000">}&gt;</span>
+<span style="color: #000000">            </span><span style="color: #001080">Weather</span><span style="color: #000000"> </span><span style="color: #001080">for</span><span style="color: #000000"> {</span><span style="color: #001080">wfor</span><span style="color: #000000">}:</span>
+<span style="color: #000000">            &lt;</span><span style="color: #267F99">div</span><span style="color: #000000">&gt;{</span><span style="color: #001080">weather</span><span style="color: #000000">}&lt;/</span><span style="color: #001080">div</span><span style="color: #000000">&gt;</span>
+<span style="color: #000000">            &lt;</span><span style="color: #001080">button</span><span style="color: #000000"> </span><span style="color: #001080">onClick</span><span style="color: #000000">={</span><span style="color: #001080">handleForToggle</span><span style="color: #000000">}&gt;</span><span style="color: #001080">Toggle</span><span style="color: #000000">&lt;/</span><span style="color: #001080">button</span><span style="color: #000000">&gt;</span>
+<span style="color: #000000">        &lt;/</span><span style="color: #001080">div</span><span style="color: #000000">&gt;</span>
+<span style="color: #000000">    );</span>
+<span style="color: #000000">};</span>
+</code></pre>
+				<blockquote>
+					<p>You can find the above component in <code>src/demo/DocsApp/components/Weather.tsx</code>.</p>
+				</blockquote>
+				<a href="#legacy--component-based-components-amp-separation-of-logic-from-the-views" id="legacy--component-based-components-amp-separation-of-logic-from-the-views" style="color: inherit; text-decoration: none;">
+					<h3>Legacy / component based components &amp; separation of logic from the views</h3>
+				</a>
+				<a href="#connect" id="connect" style="color: inherit; text-decoration: none;">
+					<h3><code>connect</code></h3>
+				</a>
+				<p><code>connect</code> function, accessible from <code>createTruth</code> will help you connect the state to the component classes (where hooks
+					are not available) or just use older <code>react-redux</code> style of connecting components to the state which helps you separate
+				state logic from the views components.</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> { </span><span style="color: #0070C1">connect</span><span style="color: #000000"> } = </span><span style="color: #795E26">createTruth</span><span style="color: #000000">(</span><span style="color: #001080">store</span><span style="color: #000000">);</span>
+</code></pre>
+				<p><code>connect</code> takes three arguments:</p>
+				<ul>
+					<li>the component you want to pass data to</li>
+					<li>function that takes state and returns new props to pass to the component</li>
+					<li>function that takes <code>update</code> function and returns new props (which should be functions) to pass to the component</li>
+				</ul>
+				<blockquote>
+					<p>If you are coming from or you have knowledge of <code>react-redux</code> please notice this is a bit different from <code>react-redux</code>
+					which takes two arguments and returns a function that should take a component.</p>
+				</blockquote>
+				<blockquote>
+					<p>react-source-of-truth:</p>
+				</blockquote>
+				<pre><code class="language-javascript"><span style="color: #795E26">connect</span><span style="color: #000000">(</span><span style="color: #001080">Component</span><span style="color: #000000">, </span><span style="color: #001080">mapStateToProps</span><span style="color: #000000">, </span><span style="color: #001080">mapUpdateToProps</span><span style="color: #000000">);</span>
+</code></pre>
+				<blockquote>
+					<p>react-redux:</p>
+				</blockquote>
+				<pre><code class="language-javascript"><span style="color: #795E26">connect</span><span style="color: #000000">(</span><span style="color: #001080">mapStateToProps</span><span style="color: #000000">, </span><span style="color: #001080">mapDispatchToProps</span><span style="color: #000000">)(</span><span style="color: #001080">Component</span><span style="color: #000000">);</span>
+</code></pre>
+				<p>An example component, which welcomes the user, shows the weather state and allows to toggle the menu (it doesn&#39;t need
+				to know about the menu being open, because it doesn&#39;t display it) can look like this:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">Props</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #795E26">toggleMenu</span><span style="color: #000000">: () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #267F99">void</span><span style="color: #000000">;</span>
+<span style="color: #000000">    </span><span style="color: #001080">name</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">;</span>
+<span style="color: #000000">    </span><span style="color: #001080">weather</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">;</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">WelcomeBar</span><span style="color: #000000">: </span><span style="color: #267F99">React</span><span style="color: #000000">.</span><span style="color: #267F99">FC</span><span style="color: #000000">&lt;</span><span style="color: #267F99">Props</span><span style="color: #000000">&gt; = (</span><span style="color: #001080">props</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> (</span>
+<span style="color: #000000">        &lt;</span><span style="color: #267F99">div</span><span style="color: #000000">&gt;</span>
+<span style="color: #000000">            &lt;</span><span style="color: #267F99">div</span><span style="color: #000000">&gt;</span><span style="color: #001080">Hello</span><span style="color: #000000"> {</span><span style="color: #001080">props</span><span style="color: #000000">.</span><span style="color: #001080">name</span><span style="color: #000000">}, </span><span style="color: #001080">it</span><span style="color: #000000">&amp;</span><span style="color: #001080">apos</span><span style="color: #000000">;</span><span style="color: #001080">s</span><span style="color: #000000"> {</span><span style="color: #001080">props</span><span style="color: #000000">.</span><span style="color: #001080">weather</span><span style="color: #000000">} </span><span style="color: #001080">today</span><span style="color: #000000">!&lt;/</span><span style="color: #001080">div</span><span style="color: #000000">&gt;</span>
+<span style="color: #000000">            &lt;</span><span style="color: #001080">button</span><span style="color: #000000"> </span><span style="color: #001080">onClick</span><span style="color: #000000">={props.</span><span style="color: #001080">toggleMenu</span><span style="color: #000000">}&gt;=&lt;/</span><span style="color: #267F99">button</span><span style="color: #000000">&gt;</span>
+<span style="color: #000000">        &lt;/</span><span style="color: #001080">div</span><span style="color: #000000">&gt;</span>
+<span style="color: #000000">    )</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>And the connecting it to the state can look like this:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">Welcome</span><span style="color: #000000"> = </span><span style="color: #795E26">connect</span><span style="color: #000000">( </span><span style="color: #008000">// Welcome is a React component you should render instead of WelcomeBar</span>
+<span style="color: #000000">    </span><span style="color: #001080">WelcomeBar</span><span style="color: #000000">,</span>
+<span style="color: #000000">    (</span><span style="color: #001080">state</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> {</span>
+<span style="color: #000000">            </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #001080">state</span><span style="color: #000000">.</span><span style="color: #001080">user</span><span style="color: #000000">.</span><span style="color: #001080">name</span><span style="color: #000000">,</span>
+<span style="color: #000000">            </span><span style="color: #001080">weather:</span><span style="color: #000000"> </span><span style="color: #001080">state</span><span style="color: #000000">.</span><span style="color: #001080">weatherWidget</span><span style="color: #000000">.</span><span style="color: #001080">today</span><span style="color: #000000">,</span>
+<span style="color: #000000">        };</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">    (</span><span style="color: #001080">update</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> {</span>
+<span style="color: #000000">            </span><span style="color: #795E26">toggleMenu</span><span style="color: #001080">:</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">ui</span><span style="color: #000000">.</span><span style="color: #001080">menuOpen</span><span style="color: #000000">, </span><span style="color: #001080">p</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> !</span><span style="color: #001080">p</span><span style="color: #000000">);</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">)</span>
+</code></pre>
+				<blockquote>
+					<p>Both function gets the same 2nd argument - <code>ownProps</code> - which are props passed to the <code>Welcome</code> component when
+					rendering.</p>
+				</blockquote>
+				<a href="#even-more" id="even-more" style="color: inherit; text-decoration: none;">
+					<h3>Even more</h3>
+				</a>
+				<p>Please check out other tutorials in these docs and demos/development playgrounds in <code>src/demo</code>.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="label pp-nav pp-group">
+						<span>Tutorials</span>
+					</li>
+					<li class="current pp-nav pp-page">
+						<a href="BasicConcepts.html">Basic concepts</a>
+					</li>
+					<li class=" pp-nav pp-page">
+						<a href="AdvancedUsage.html">Advanced usage</a>
+					</li>
+					<li class=" pp-nav pp-page">
+						<a href="KeepThatInMind.html">Keep that in mind</a>
+					</li>
+					<li class="label pp-nav pp-group">
+						<span>API</span>
+					</li>
+					<li class=" ">
+						<a href="../../modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../../assets/js/search.json"><' + '/script>');</script>
+</body>
+</html>

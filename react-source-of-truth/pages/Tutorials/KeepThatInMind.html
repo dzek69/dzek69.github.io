@@ -1,0 +1,201 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Keep that in mind | react-source-of-truth - v4.0.0</title>
+	<meta name="description" content="Documentation for react-source-of-truth - v4.0.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/main.css">
+	<link rel="stylesheet" href="../../assets/css/pages.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../../assets/js/search.json" data-base="../..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../../index.html" class="title">react-source-of-truth - v4.0.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../../modules.html">Globals</a>
+				</li>
+				<li>
+					<a href="BasicConcepts.html">Tutorials</a>
+				</li>
+				<li>
+					<a href="KeepThatInMind.html">Keep that in mind</a>
+				</li>
+			</ul>
+			<h1>Keep that in mind</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#things-to-keep-in-mind-when-using-react-source-of-truth" id="things-to-keep-in-mind-when-using-react-source-of-truth" style="color: inherit; text-decoration: none;">
+					<h2>Things to keep in mind when using <code>react-source-of-truth</code></h2>
+				</a>
+				<p>As this library aims for maximum simplicity and small API there is no much more than reading the state and updating it.
+				But there is one common pitfall you need to keep in mind</p>
+				<a href="#when-updating-the-state-you-are-dealing-with-proxied-objects" id="when-updating-the-state-you-are-dealing-with-proxied-objects" style="color: inherit; text-decoration: none;">
+					<h3>When updating the state you are dealing with Proxied objects</h3>
+				</a>
+				<p>When you are updating the state you need to pass a selector function that points to the part of the state you want to
+					update. It is very similar to the selector function of <code>useTruthSelector</code> but there is a difference - <code>useTruthSelector</code>
+					gets your plain state object untouched. <code>update</code> method however reads the property you are reading as you go deeper and
+				deeper into your state.</p>
+				<p>With just an objects in your path this is straightforward:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">ui</span><span style="color: #000000">: {</span>
+<span style="color: #000000">        </span><span style="color: #001080">modal</span><span style="color: #000000">: {</span>
+<span style="color: #000000">            </span><span style="color: #001080">open</span><span style="color: #000000">: </span><span style="color: #267F99">boolean</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<pre><code class="language-javascript"><span style="color: #795E26">useTruthSelector</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">ui</span><span style="color: #000000">.</span><span style="color: #001080">modal</span><span style="color: #000000">.</span><span style="color: #001080">open</span><span style="color: #000000">); </span><span style="color: #008000">// read value</span>
+<span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">ui</span><span style="color: #000000">.</span><span style="color: #001080">modal</span><span style="color: #000000">.</span><span style="color: #001080">open</span><span style="color: #000000">, </span><span style="color: #001080">p</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> !</span><span style="color: #001080">p</span><span style="color: #000000">); </span><span style="color: #008000">// toggle value</span>
+</code></pre>
+				<p>Things get complicated when you meet an array or optional property on your way:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">articles</span><span style="color: #000000">: </span><span style="color: #267F99">Array</span><span style="color: #000000">&lt;{ </span><span style="color: #001080">title</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">; </span><span style="color: #001080">author</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000"> }&gt;</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>This works:</p>
+				<pre><code class="language-javascript"><span style="color: #795E26">useTruthSelector</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">articles</span><span style="color: #000000">[</span><span style="color: #098658">0</span><span style="color: #000000">].</span><span style="color: #001080">title</span><span style="color: #000000">); </span><span style="color: #008000">// gets first article title</span>
+<span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">articles</span><span style="color: #000000">[</span><span style="color: #098658">0</span><span style="color: #000000">].</span><span style="color: #001080">title</span><span style="color: #000000">, </span><span style="color: #001080">t</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;News of the day: &quot;</span><span style="color: #000000"> + </span><span style="color: #001080">t</span><span style="color: #000000">); </span><span style="color: #008000">// prepends a text to the title</span>
+</code></pre>
+				<p>But this fails:</p>
+				<pre><code class="language-javascript"><span style="color: #795E26">useTruthSelector</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">articles</span><span style="color: #000000">.</span><span style="color: #795E26">find</span><span style="color: #000000">(</span><span style="color: #001080">a</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">author</span><span style="color: #000000"> === </span><span style="color: #A31515">&quot;John&quot;</span><span style="color: #000000">).</span><span style="color: #001080">title</span><span style="color: #000000">); </span><span style="color: #008000">// gets title of  first article by John - this is OK!</span>
+<span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">articles</span><span style="color: #000000">.</span><span style="color: #795E26">find</span><span style="color: #000000">(</span><span style="color: #001080">a</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">author</span><span style="color: #000000"> === </span><span style="color: #A31515">&quot;John&quot;</span><span style="color: #000000">).</span><span style="color: #001080">title</span><span style="color: #000000">, </span><span style="color: #001080">t</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;News of the day: &quot;</span><span style="color: #000000"> + </span><span style="color: #001080">t</span><span style="color: #000000">); </span><span style="color: #008000">// you just messed up the state :(</span>
+</code></pre>
+				<p>Why? Because you are reading <code>articles</code> and then <code>find</code> property of the state. And this is the path you will be
+					updating. This is a trade-off for having such a simple way to update deep property of and object, keeping immutability
+				and full TypeScript support.</p>
+				<p>The fix:</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">state</span><span style="color: #000000"> = </span><span style="color: #001080">store</span><span style="color: #000000">.</span><span style="color: #795E26">getState</span><span style="color: #000000">();</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">indexOfArticle</span><span style="color: #000000"> = </span><span style="color: #001080">state</span><span style="color: #000000">.</span><span style="color: #001080">articles</span><span style="color: #000000">.</span><span style="color: #795E26">findIndex</span><span style="color: #000000">(</span><span style="color: #001080">a</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">author</span><span style="color: #000000"> === </span><span style="color: #A31515">&quot;John&quot;</span><span style="color: #000000">);</span>
+<span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">articles</span><span style="color: #000000">[</span><span style="color: #001080">indexOfArticle</span><span style="color: #000000">].</span><span style="color: #001080">title</span><span style="color: #000000">, </span><span style="color: #001080">t</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;News of the day: &quot;</span><span style="color: #000000"> + </span><span style="color: #001080">t</span><span style="color: #000000">); </span><span style="color: #008000">// All good now</span>
+</code></pre>
+				<p>Another example - optional property this time:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">temperature</span><span style="color: #000000">: {</span>
+<span style="color: #000000">        </span><span style="color: #001080">kitchen</span><span style="color: #000000">?: {</span>
+<span style="color: #000000">            </span><span style="color: #001080">lastRead</span><span style="color: #000000">: </span><span style="color: #267F99">number</span><span style="color: #000000">;</span>
+<span style="color: #000000">            </span><span style="color: #001080">value</span><span style="color: #000000">: </span><span style="color: #267F99">number</span><span style="color: #000000">;</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">        </span><span style="color: #001080">bedroom</span><span style="color: #000000">?: {</span>
+<span style="color: #000000">            </span><span style="color: #001080">lastRead</span><span style="color: #000000">: </span><span style="color: #267F99">number</span><span style="color: #000000">;</span>
+<span style="color: #000000">            </span><span style="color: #001080">value</span><span style="color: #000000">: </span><span style="color: #267F99">number</span><span style="color: #000000">;</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>This fails when current state is:</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">currentState</span><span style="color: #000000"> = {</span>
+<span style="color: #000000">    </span><span style="color: #001080">temperature:</span><span style="color: #000000"> {},</span>
+<span style="color: #000000">};</span>
+<span style="color: #008000">// ^ valid state, according to types</span>
+</code></pre>
+				<pre><code class="language-javascript"><span style="color: #795E26">useTruthSelector</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">temperature</span><span style="color: #000000">.</span><span style="color: #001080">kitchen</span><span style="color: #000000">?.</span><span style="color: #001080">value</span><span style="color: #000000">); </span><span style="color: #008000">// gets kitchen temperature or undefined</span>
+<span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">temperature</span><span style="color: #000000">.</span><span style="color: #001080">kitchen</span><span style="color: #000000">?.</span><span style="color: #001080">value</span><span style="color: #000000">, () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #098658">23</span><span style="color: #000000">); </span><span style="color: #008000">// state gets messed up again</span>
+</code></pre>
+				<p>Again, why? Because you are reading <code>temperatures</code> and then <code>kichen</code> property of the state. <code>value</code> never gets read,
+				because <code>kitchen</code> wasn&#39;t there yet. So you will be setting <code>temperature.kitchen</code> path to <code>23</code>.</p>
+				<p>The fix:</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">state</span><span style="color: #000000"> = </span><span style="color: #001080">store</span><span style="color: #000000">.</span><span style="color: #795E26">getState</span><span style="color: #000000">();</span>
+<span style="color: #AF00DB">if</span><span style="color: #000000"> (!</span><span style="color: #001080">state</span><span style="color: #000000">.</span><span style="color: #001080">temperature</span><span style="color: #000000">.</span><span style="color: #001080">kitchen</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">temperature</span><span style="color: #000000">.</span><span style="color: #001080">kitchen</span><span style="color: #000000">, () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> ({})); </span><span style="color: #008000">// set it to empty object first</span>
+<span style="color: #000000">}</span>
+<span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">temperature</span><span style="color: #000000">.</span><span style="color: #001080">kitchen</span><span style="color: #000000">.</span><span style="color: #001080">value</span><span style="color: #000000">, () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #098658">23</span><span style="color: #000000">); </span><span style="color: #008000">// all good now</span>
+<span style="color: #795E26">update</span><span style="color: #000000">(</span><span style="color: #001080">s</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000">.</span><span style="color: #001080">temperature</span><span style="color: #000000">.</span><span style="color: #001080">kitchen</span><span style="color: #000000">.</span><span style="color: #001080">lastRead</span><span style="color: #000000">, () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #267F99">Date</span><span style="color: #000000">.</span><span style="color: #795E26">now</span><span style="color: #000000">()); </span><span style="color: #008000">// let&#039;s update something more</span>
+</code></pre>
+				<p>Don&#39;t worry about useless re-renders - if you are synchronously updating the state - it will result with just one state
+				update for React.</p>
+				<p>These updates are a bit troublesome, but I have some ideas how to improve the API to take account for this.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="label pp-nav pp-group">
+						<span>Tutorials</span>
+					</li>
+					<li class=" pp-nav pp-page">
+						<a href="BasicConcepts.html">Basic concepts</a>
+					</li>
+					<li class=" pp-nav pp-page">
+						<a href="AdvancedUsage.html">Advanced usage</a>
+					</li>
+					<li class="current pp-nav pp-page">
+						<a href="KeepThatInMind.html">Keep that in mind</a>
+					</li>
+					<li class="label pp-nav pp-group">
+						<span>API</span>
+					</li>
+					<li class=" ">
+						<a href="../../modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../../assets/js/search.json"><' + '/script>');</script>
+</body>
+</html>
